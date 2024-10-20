@@ -4,6 +4,7 @@ package net.xdclass.component;
 import lombok.extern.slf4j.Slf4j;
 import net.xdclass.config.SmsConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -42,6 +43,7 @@ public class SmsComponent {
      * @param templateId
      * @param code
      */
+    @Async("threadPoolTaskExecutor")
     public  void send(String phoneNumber, String templateId, String code) throws IOException, URISyntaxException, InterruptedException {
 
         String appCode = smsConfig.getAppCode();

@@ -26,28 +26,12 @@ public class NotifyController {
      */
     @RequestMapping("send_code")
     public JsonData sendCode(){
-        notifyService.testSend();
+
         return JsonData.buildSuccess();
     }
 
 
-//    @Autowired
-//    private RestTemplate restTemplate;
-//
-//    @Async
-//    public void testSend() {
-//        try {
-//            TimeUnit.MILLISECONDS.sleep(2000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        long beginTime = CommonUtil.getCurrentTimestamp();
-//        ResponseEntity<String> forEntity = restTemplate.getForEntity("http://old.xdclass.net", String.class);
-//        String body = forEntity.getBody();
-//        long endTime = CommonUtil.getCurrentTimestamp();
-//        log.info("耗时={},body={}",endTime-beginTime,body);
-//
-//    }
+
 
 
 
