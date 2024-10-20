@@ -13,6 +13,7 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
@@ -32,10 +33,7 @@ public class RestTemplateConfig {
 
     @Bean
     public ClientHttpRequestFactory httpRequestFactory(){
-        SimpleClientHttpRequestFactory factory  = new SimpleClientHttpRequestFactory();
-        factory.setReadTimeout(10000);
-        factory.setConnectTimeout(10000);
-        return factory;
+        return new HttpComponentsClientHttpRequestFactory(httpClient());
     }
 
     @Bean
