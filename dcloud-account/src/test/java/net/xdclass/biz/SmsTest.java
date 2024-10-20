@@ -27,7 +27,7 @@ public class SmsTest {
     private SmsConfig smsConfig;
 
     @Test
-    public  void testSendSms() throws IOException, URISyntaxException, InterruptedException {
+    public  void testSendSms()  {
 
         smsComponent.send("13617235070",smsConfig.getTemplateId(),"666888");
     }

@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
@@ -44,12 +45,19 @@ public class SmsComponent {
      * @param code
      */
     @Async("threadPoolTaskExecutor")
-    public  void send(String phoneNumber, String templateId, String code) throws IOException, URISyntaxException, InterruptedException {
+    public  void send(String phoneNumber, String templateId, String code)  {
 
         String appCode = smsConfig.getAppCode();
 
         // 构建请求体
-        String content = "code:" + URLEncoder.encode(code, StandardCharsets.UTF_8.toString());
+        String content = null;
+        try {
+            content = "code:" + URLEncoder.encode(code, StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+
         String body = "content=" + content + "&template_id=" + templateId + "&phone_number=" + phoneNumber;
 
         // 创建 HttpClient 实例
@@ -58,16 +66,28 @@ public class SmsComponent {
                 .build();
 
         // 创建 HttpRequest 实例
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(new URI(URL_TEMPLATE))
-                .timeout(Duration.ofSeconds(10))
-                .header("Authorization", "APPCODE " + appCode)
-                .header("Content-Type", "application/x-www-form-urlencoded")
-                .POST(HttpRequest.BodyPublishers.ofString(body, StandardCharsets.UTF_8))
-                .build();
+        HttpRequest request = null;
+        try {
+            request = HttpRequest.newBuilder()
+                    .uri(new URI(URL_TEMPLATE))
+                    .timeout(Duration.ofSeconds(10))
+                    .header("Authorization", "APPCODE " + appCode)
+                    .header("Content-Type", "application/x-www-form-urlencoded")
+                    .POST(HttpRequest.BodyPublishers.ofString(body, StandardCharsets.UTF_8))
+                    .build();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
 
         // 发送请求并获取响应
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = null;
+        try {
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         // 打印响应状态码和响应体
         log.info("Response Code:{}",response.statusCode());

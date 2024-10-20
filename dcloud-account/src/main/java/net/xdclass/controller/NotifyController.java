@@ -2,12 +2,16 @@ package net.xdclass.controller;
 
 import com.google.code.kaptcha.Producer;
 import lombok.extern.slf4j.Slf4j;
+import net.xdclass.enums.BizCodeEnum;
+import net.xdclass.enums.SendCodeEnum;
+import net.xdclass.request.SendCodeRequest;
 import net.xdclass.service.NotifyService;
 import net.xdclass.util.CommonUtil;
 import net.xdclass.util.JsonData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -68,14 +72,26 @@ public class NotifyController {
     }
 
     /**
-     * 测试发送验证码接口-主要是用于对比优化前后区别
+     * 发送短信验证码
      *
      * @return
      */
     @RequestMapping("send_code")
-    public JsonData sendCode() {
+    public JsonData sendCode(@RequestBody SendCodeRequest sendCodeRequest,HttpServletRequest request) {
 
-        return JsonData.buildSuccess();
+        //1. 验证图形验证码是否对
+        String key = getCaptchaKey(request);
+        String captchaKey = redisTemplate.opsForValue().get(key);
+        if (captchaKey!=null&&captchaKey.equals(sendCodeRequest.getCaptcha())){
+            //2. 删除缓存图形验证码
+            redisTemplate.delete(key);
+            //3. 发送短信验证码
+           JsonData jsonData= notifyService.sendCode(SendCodeEnum.USER_REGISTER,sendCodeRequest.getTo());
+           return jsonData;
+        }else {
+            return JsonData.buildResult(BizCodeEnum.CODE_CAPTCHA_ERROR);
+        }
+
     }
 
     private String getCaptchaKey(HttpServletRequest request) {
