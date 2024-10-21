@@ -12,6 +12,7 @@ import net.xdclass.request.AccountRegisterRequest;
 import net.xdclass.service.AccountService;
 import net.xdclass.service.NotifyService;
 import net.xdclass.util.CommonUtil;
+import net.xdclass.util.JWTUtil;
 import net.xdclass.util.JsonData;
 import org.apache.commons.codec.digest.Md5Crypt;
 import org.apache.commons.lang3.StringUtils;
@@ -115,9 +116,9 @@ public class AccountServiceImpl implements AccountService {
                 LoginUser loginUser = LoginUser.builder().build();
                 BeanUtils.copyProperties(accountDO,loginUser);
 
-                //生成TOKEN TODO
-
-                return JsonData.buildSuccess("");
+                //生成TOKEN
+                String token = JWTUtil.geneJsonWebTokne(loginUser);
+                return JsonData.buildSuccess(token);
 
             }else {
                 return JsonData.buildResult(BizCodeEnum.ACCOUNT_PWD_ERROR);
