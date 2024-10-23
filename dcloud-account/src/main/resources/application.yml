@@ -72,7 +72,7 @@ spring:
             column: id
             props:
               worker:
-                id: 0
+                id: ${workId}
             #id生成策略
             type: SNOWFLAKE
 
