@@ -12,6 +12,7 @@ import net.xdclass.request.AccountRegisterRequest;
 import net.xdclass.service.AccountService;
 import net.xdclass.service.NotifyService;
 import net.xdclass.util.CommonUtil;
+import net.xdclass.util.IDUtil;
 import net.xdclass.util.JWTUtil;
 import net.xdclass.util.JsonData;
 import org.apache.commons.codec.digest.Md5Crypt;
@@ -77,8 +78,8 @@ public class AccountServiceImpl implements AccountService {
         accountDO.setAuth(AuthTypeEnum.DEFAULT.name());
 
 
-        //生成唯一的账号  TODO
-        accountDO.setAccountNo(CommonUtil.getCurrentTimestamp());
+        //生成唯一的账号
+        accountDO.setAccountNo(Long.valueOf(IDUtil.geneSnowFlakeID().toString()));
 
         //设置密码 秘钥 盐
         accountDO.setSecret("$1$"+CommonUtil.getStringNumRandom(8));
