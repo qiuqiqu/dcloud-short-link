@@ -11,4 +11,9 @@ public interface LinkGroupManager {
 
     int del(Long groupId, Long accountNo);
 
+    LinkGroupDO detail(Long groupId, Long accountNo);
+
+    List<LinkGroupDO> listAllGroup(Long accountNo);
+
+    int updateById(LinkGroupDO linkGroupDO);
 }
