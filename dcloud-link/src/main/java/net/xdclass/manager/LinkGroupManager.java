@@ -1,0 +1,14 @@
+package net.xdclass.manager;
+
+import net.xdclass.model.LinkGroupDO;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
+
+public interface LinkGroupManager {
+
+    int add(LinkGroupDO linkGroupDO);
+
+    int del(Long groupId, Long accountNo);
+
+}
